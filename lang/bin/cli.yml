@@ -1,0 +1,180 @@
+About:
+  - A tool for creating Windows application images
+  - 一个创建 Windows 应用程序镜像的工具
+LongAbout:
+  - |-
+      A tool for creating Windows application images
+      Uses WinFsp + DwarFS, similar to AppImage
+      Example: {} source.dwarfs output.exe -- app.exe
+  - |-
+      一个创建 Windows 应用程序镜像的工具
+      使用 WinFsp + DwarFS，原理类似于 AppImage
+      示例: {} source.dwarfs output.exe -- app.exe
+
+Source:
+  - Source file path
+  - 源文件路径
+Output:
+  - Output file path
+  - 输出文件路径
+Command:
+  - Command to execute
+  - 启动命令
+Workdir:
+  - Working directory
+  - 工作目录
+CompressLevel:
+  - Compression level
+  - 压缩等级
+External:
+  - Launch external program
+  - 启动外部程序
+NoDepend:
+  - Do not package dependencies
+  - 不打包依赖
+ShowConsole:
+  - Show console
+  - 显示控制台
+ReqAdmin:
+  - Request administrator privileges
+  - 请求管理员权限
+CopyInfo:
+  - Copy info from the command to execute
+  - 复制启动程序信息
+CopyIcon:
+  - Copy icon from the command to execute
+  - 复制启动程序图标
+SetInfo:
+  - Set info
+  - 设置信息
+SetIcon:
+  - Set icon
+  - 设置图标
+SetManifest:
+  - Set manifest
+  - 设置清单
+UseMkdwarfs:
+  - Use mkdwarfs to build the image
+  - 使用 mkdwarfs 构建镜像
+StartedTime:
+  - Time after which startup counts as successful
+  - 判断为启动成功时间
+Write:
+  - Save writable layer (experimental)
+  - 保存可写层（实验性）
+WriteTemp:
+  - Temporary writable layer (experimental)
+  - 临时可写层（实验性）
+WriteMemory:
+  - Memory writable layer (experimental)
+  - 内存可写层（实验性）
+
+InputCommand:
+  - Please enter the command to execute
+  - 请输入启动命令
+NotFoundCommand:
+  - Command to execute not found
+  - 未找到启动命令
+ReadCommandError:
+  - Read command error {:?}
+  - 读取启动命令错误 {:?}
+ReadCommandResourceError:
+  - "Read command error: resource directory"
+  - "读取启动命令错误: 资源目录"
+
+NotFoundSource:
+  - Source file not found
+  - 未找到源文件
+BuildImage:
+  - Build image
+  - 构建镜像
+BuildImageFail:
+  - Build image failed
+  - 构建镜像失败
+
+AbsoluteCommand:
+  - "Warning: The command to execute is an absolute path"
+  - "警告: 启动命令为绝对路径"
+AbsoluteWorkdir:
+  - "Warning: The working directory is an absolute path"
+  - "警告: 工作目录为绝对路径"
+
+BuildFile:
+  - Build file
+  - 构建文件
+ReadProgram:
+  - Read program
+  - 读取程序
+ReadProgramError:
+  - Read program error {:?}
+  - 读取程序错误 {:?}
+WriteSubsystem:
+  - Write subsystem
+  - 写入子系统
+WriteReqAdmin:
+  - Write the manifest requesting administrator privileges
+  - 写入请求管理员权限清单
+
+WriteManifest:
+  - Write manifest
+  - 写入清单
+ReadManifestError:
+  - Read manifest error {:?}
+  - 读取清单错误 {:?}
+WriteManifestError:
+  - Write manifest error {:?}
+  - 写入清单错误 {:?}
+NotFoundManifest:
+  - Manifest not found
+  - 未找到清单
+
+WriteInfo:
+  - Write info
+  - 写入信息
+ReadInfoError:
+  - Read info error {:?}
+  - 读取信息错误 {:?}
+InvalidInputInfo:
+  - "Invalid input info: {}"
+  - 输入信息无效 {}
+WriteInfoError:
+  - Write info error {:?}
+  - 写入信息错误 {:?}
+WriteInfoOffset:
+  - Write info offset
+  - 写入信息偏移
+
+WriteIcon:
+  - Write icon
+  - 写入图标
+WriteIconError:
+  - Write icon error {:?}
+  - 写入图标错误 {:?}
+
+WriteResource:
+  - Write resource directory
+  - 写入资源目录
+WriteResourceError:
+  - Write resource directory error {:?}
+  - 写入资源目录错误 {:?}
+
+WriteProgram:
+  - Write program
+  - 写入程序
+WriteProgramError:
+  - Write program error {:?}
+  - 写入程序错误 {:?}
+
+WriteDepend:
+  - Write dependencies
+  - 写入依赖
+WriteImage:
+  - Write image
+  - 写入镜像
+
+InfoSerializeError:
+  - Info serialize error {:?}
+  - 信息序列化错误 {:?}
+ProcessComplete:
+  - Process complete
+  - 处理完成

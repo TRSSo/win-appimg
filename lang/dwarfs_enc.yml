@@ -1,0 +1,39 @@
+InvalidFileName:
+  - Invalid file name
+  - 添加的文件名无效
+InvalidDirName:
+  - Invalid folder name
+  - 添加的文件夹名无效
+AddSymlinkError:
+  - "Add symlink error: {:?}"
+  - "添加符号链接错误: {:?}"
+AddDirError:
+  - "Add folder error: {:?}"
+  - "添加文件夹错误: {:?}"
+AddHardLinkError:
+  - "Add hard link error: {:?}"
+  - "添加硬链接错误: {:?}"
+ReadFileError:
+  - "Read file error: {:?}"
+  - "读取文件错误: {:?}"
+AddFileError:
+  - "Add file error: {:?}"
+  - "添加文件错误: {:?}"
+AddParentDirError:
+  - "Add intermediate folder error: {:?}"
+  - "添加中间文件夹错误: {:?}"
+WriteChunkError:
+  - "Write chunk data error: {:?}"
+  - "写入块数据错误: {:?}"
+GenMetadataError:
+  - "Generate metadata error: {:?}"
+  - "生成元数据错误: {:?}"
+WriteMetadataError:
+  - "Write metadata error: {:?}"
+  - "写入元数据错误: {:?}"
+WriteDataError:
+  - "Write data error: {:?}"
+  - "写入数据错误: {:?}"
+SkipUnsupportedFile:
+  - Skipped unsupported file
+  - 跳过不支持的文件

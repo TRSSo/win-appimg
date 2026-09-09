@@ -1,0 +1,15 @@
+UacCancelled:
+  - User cancelled UAC authorization
+  - 用户取消了 UAC 授权
+ShellExecuteError:
+  - "ShellExecuteExW error {}"
+  - "ShellExecuteExW 错误 {}"
+ShellExecuteInvalidProcess:
+  - ShellExecuteExW succeeded, but the process handle is invalid
+  - ShellExecuteExW 成功，但进程句柄无效
+WaitProcessError:
+  - "Failed to wait for the process: {}"
+  - "等待进程失败 {}"
+GetExitCodeError:
+  - "Failed to get the process exit code: {}"
+  - "获取进程退出码失败 {}"

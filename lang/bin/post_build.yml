@@ -1,0 +1,61 @@
+DownloadFile:
+  - Download file
+  - 下载文件
+DownloadError:
+  - "Download error: {}"
+  - "下载错误: {}"
+StartCurlError:
+  - "Cannot start curl: {:?}"
+  - "无法启动 curl: {:?}"
+HashVerifyFailed:
+  - SHA256 verification failed
+  - SHA256 校验失败
+
+BuildFile:
+  - Build file
+  - 构建文件
+UseCache:
+  - Verification passed, using cached files
+  - 校验通过，使用缓存文件
+ExtractFile:
+  - Extract file
+  - 解压文件
+ExtractError:
+  - "Extract error: {}"
+  - "解压错误: {}"
+Start7zError:
+  - "Cannot start 7z: {:?}"
+  - "无法启动 7z: {:?}"
+PackFile:
+  - Pack file
+  - 打包文件
+
+ReadProgramError:
+  - Read program error {:?}
+  - 读取程序错误 {:?}
+PayloadOffsetNotFound:
+  - Info offset not found
+  - 未找到信息偏移
+
+WriteDepend:
+  - Write dependencies
+  - 写入依赖
+WriteProgram:
+  - Write program
+  - 写入程序
+InfoSerializeError:
+  - Info serialize error {:?}
+  - 信息序列化错误 {:?}
+WriteInfo:
+  - Write info
+  - 写入信息
+WriteInfoOffset:
+  - Write info offset
+  - 写入信息偏移
+ProcessComplete:
+  - Process complete
+  - 处理完成
+
+NotFoundFile:
+  - "File not found: {}"
+  - "未找到文件: {}"

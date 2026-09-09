@@ -1,0 +1,144 @@
+name: Build and Release
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  build-windows:
+    name: Windows x64
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: clippy, rustfmt
+      - uses: actions-rust-lang/rustfmt@v1
+
+      - uses: giraffate/clippy-action@v1
+        with:
+          reporter: github-pr-review
+          filter_mode: nofilter
+          fail_on_error: true
+          clippy_flags: >-
+            -r --all-features
+            --all-targets
+            --
+            -D warnings
+
+      - run: cargo test -r --all-features
+      - run: cargo build -r --all-features
+
+      - name: Upload Windows launcher.exe
+        uses: actions/upload-artifact@v7
+        with:
+          name: windows-launcher
+          path: target/release/launcher.exe
+          if-no-files-found: error
+
+      - run: target/release/post_build
+      - run: |
+          Get-ChildItem -Path target/release/win-appimg-* | ForEach-Object {
+            Move-Item -Path $_.FullName -Destination "$($_.BaseName)-windows-x64$($_.Extension)"
+          }
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: win-appimg-windows-x64
+          path: win-appimg-*
+          if-no-files-found: error
+
+  build:
+    name: ${{ matrix.name }}
+    needs: build-windows
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            name: macOS arm64
+            artifact: macos-arm64
+
+          - os: ubuntu-latest
+            name: Linux x64
+            artifact: linux-x64
+
+          - os: ubuntu-24.04-arm
+            name: Linux arm64
+            artifact: linux-arm64
+
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: clippy, rustfmt
+      - uses: actions-rust-lang/rustfmt@v1
+
+      - uses: giraffate/clippy-action@v1
+        with:
+          reporter: github-pr-review
+          filter_mode: nofilter
+          fail_on_error: true
+          clippy_flags: >-
+            -r
+            --all-targets
+            --
+            -D warnings
+
+      - run: cargo test -r
+      - run: cargo build -r
+
+      - name: Download Windows launcher.exe
+        uses: actions/download-artifact@v7
+        with:
+          name: windows-launcher
+          path: windows-launcher
+
+      - run: target/release/post_build windows-launcher/launcher.exe
+      - run: |
+          for i in target/release/win-appimg-*; do
+            mv "$i" "$(basename "$i")-${{ matrix.artifact }}"
+          done
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: win-appimg-${{ matrix.artifact }}
+          path: win-appimg-*
+          if-no-files-found: error
+
+  release:
+    name: Upload Release Assets
+    needs:
+      - build-windows
+      - build
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v7
+        with:
+          pattern: win-appimg-*
+          path: assets
+          merge-multiple: true
+
+      - name: Publish to GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: assets/*

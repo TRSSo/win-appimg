@@ -1,0 +1,12 @@
+ReadFileSizeError:
+  - Cannot read file size
+  - 无法读取文件大小
+OffsetOutOfRange:
+  - "Offset {} > file size {}"
+  - "偏移量 {} > 文件大小 {}"
+LengthOutOfRange:
+  - "Input size {} > remaining size: file size {} - offset {}"
+  - "输入大小 {} > 剩余大小: 文件大小 {} - 偏移量 {}"
+PathNotFound:
+  - "Path does not exist: {}"
+  - "路径不存在: {}"

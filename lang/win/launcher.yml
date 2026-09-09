@@ -1,0 +1,64 @@
+LaunchErrorTitle:
+  - Launch error
+  - 启动错误
+InstallDependPrompt:
+  - Start installing dependency?
+  - 是否开始安装依赖？
+InstallDependPromptContent:
+  - |-
+      Estimated 10 MiB of space required on drive C:
+      Details: {}
+  - |-
+      预计占用 C: 10 MiB 空间
+      详细信息：{}
+CompatModeTitle:
+  - Compatibility mode
+  - 兼容模式提示
+CompatModePrompt:
+  - Use compatibility mode?
+  - 是否使用兼容模式？
+CompatModeContent:
+  - Extract to a temporary folder and start
+  - 解压到临时文件夹后启动
+UserCancelled:
+  - User cancelled the operation
+  - 用户取消了操作
+LaunchErrorPromptTitle:
+  - Launch error
+  - 启动错误提示
+LaunchErrorPromptContent:
+  - |-
+      Click "OK"    to repair the program
+      Click "Retry" to restart the program
+      Click "Close" to terminate the program
+  - |-
+      要修复程序，请点击“确定”
+      要重启程序，请点击“重试”
+      要终止程序，请点击“关闭”
+RepairTitle:
+  - Launch repair
+  - 启动修复提示
+RepairPrompt:
+  - Launch repair options
+  - 启动修复选项
+RepairContent:
+  - |-
+      Click "Yes"    to reinstall the dependency
+      Click "No"     to fully reinstall the dependency; it will be uninstalled and the system will be restarted
+      Click "Cancel" to use compatibility mode, extract to a temporary folder and start
+  - |-
+      点击“是”　 重装依赖
+      点击“否”　 彻底重装依赖，将会卸载依赖并重启系统
+      点击“取消” 使用兼容模式，解压到临时文件夹后启动
+DependUninstallComplete:
+  - Dependency uninstallation complete
+  - 依赖卸载完成
+RestartSystemPrompt:
+  - Click "Yes" to restart the system now, click "No" to restart manually later
+  - 点击“是”立即重启系统，点击“否”稍后手动重启
+InstallDependTitle:
+  - Install dependency
+  - 依赖安装提示
+DataVerifyFailed:
+  - Data verification failed
+  - 数据校验失败

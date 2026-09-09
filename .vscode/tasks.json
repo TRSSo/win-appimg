@@ -1,0 +1,104 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "rust: cargo fmt",
+			"type": "process",
+			"command": "cargo",
+			"args": ["fmt"],
+			"problemMatcher": ["$rustc"]
+		},
+		{
+			"label": "rust: cargo clippy",
+			"type": "process",
+			"command": "cargo",
+			"args": ["clippy", "--all-targets", "--", "-D", "warnings"],
+			"windows": {
+				"args": [
+					"clippy",
+					"--all-targets",
+					"--all-features",
+					"--",
+					"-D",
+					"warnings"
+				]
+			},
+			"problemMatcher": ["$rustc"],
+			"dependsOn": ["rust: cargo fmt"]
+		},
+		{
+			"label": "rust: cargo test",
+			"type": "process",
+			"command": "cargo",
+			"args": ["test"],
+			"windows": { "args": ["test", "--all-features"] },
+			"problemMatcher": ["$rustc"],
+			"dependsOn": ["rust: cargo clippy"]
+		},
+		{
+			"label": "rust: cargo build",
+			"type": "process",
+			"command": "cargo",
+			"args": ["build"],
+			"windows": { "args": ["build", "--all-features"] },
+			"problemMatcher": ["$rustc"],
+			"dependsOn": ["rust: cargo test"]
+		},
+		{
+			"label": "rust: cargo post build",
+			"type": "process",
+			"command": "target/debug/post_build",
+			"windows": { "command": "target/debug/post_build.exe" },
+			"dependsOn": ["rust: cargo build"],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "rust: cargo release clippy",
+			"type": "process",
+			"command": "cargo",
+			"args": ["clippy", "-r", "--all-targets", "--", "-D", "warnings"],
+			"windows": {
+				"args": [
+					"clippy",
+					"-r",
+					"--all-targets",
+					"--all-features",
+					"--",
+					"-D",
+					"warnings"
+				]
+			},
+			"problemMatcher": ["$rustc"],
+			"dependsOn": ["rust: cargo fmt"]
+		},
+		{
+			"label": "rust: cargo release test",
+			"type": "process",
+			"command": "cargo",
+			"args": ["test", "-r"],
+			"windows": { "args": ["test", "-r", "--all-features"] },
+			"problemMatcher": ["$rustc"],
+			"dependsOn": ["rust: cargo release clippy"]
+		},
+		{
+			"label": "rust: cargo release build",
+			"type": "process",
+			"command": "cargo",
+			"args": ["build", "-r"],
+			"windows": { "args": ["build", "-r", "--all-features"] },
+			"problemMatcher": ["$rustc"],
+			"dependsOn": ["rust: cargo release test"]
+		},
+		{
+			"label": "rust: cargo release post build",
+			"type": "process",
+			"command": "target/release/post_build",
+			"windows": { "command": "target/release/post_build.exe" },
+			"dependsOn": ["rust: cargo release build"],
+			"group": "build"
+		}
+	]
+}

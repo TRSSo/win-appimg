@@ -1,0 +1,24 @@
+Win32Error:
+  - "Win32 error {}"
+  - "Win32 错误 {}"
+AppStartError:
+  - "App start error {}"
+  - "应用启动错误 {}"
+AppExited:
+  - App exited within {} seconds after start
+  - 应用启动后在{}秒内停止运行
+ExitCodeSuffix:
+  - ", exit code {}"
+  - "，退出码 {}"
+DependStartError:
+  - "{} start error {}"
+  - "{} 启动错误 {}"
+DependExited:
+  - "{} has stopped running"
+  - "{} 已停止运行"
+DependStartupTimeout:
+  - "{} startup timed out: {}"
+  - "{} 启动超时 {}"
+LauncherStopped:
+  - Launcher received a stop event
+  - 启动器接收到停止事件

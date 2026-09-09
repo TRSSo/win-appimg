@@ -1,0 +1,21 @@
+InvalidPayloadLength:
+  - "Invalid info length: file length {}, info offset {}, info length {}"
+  - "信息长度无效: 文件长度 {} 信息偏移 {} 信息长度 {}"
+PayloadDeserializeError:
+  - "Info deserialize error: {:?}"
+  - "信息反序列化错误: {:?}"
+PayloadOffsetNotFound:
+  - Info offset not found
+  - 未找到信息偏移
+HashError:
+  - "Hash calculation error: expected {}, missing {}"
+  - "哈希计算错误: 预期 {}, 缺少 {}"
+OffsetBeyondFile:
+  - "Offset {} > file size {}"
+  - "偏移量 {} > 文件大小 {}"
+RangeBeyondFile:
+  - "Offset {} + length {} > file size {}"
+  - "偏移量 {} + 长度 {} > 文件大小 {}"
+DataVerifyFailed:
+  - Data verification failed
+  - 数据校验失败

@@ -1,0 +1,62 @@
+NotFoundWinFsp:
+  - WinFsp not found
+  - 未找到 WinFsp
+NotFoundFile:
+  - "File not found: {}"
+  - "未找到文件: {}"
+RunError:
+  - "{} run error: {}"
+  - "{} 运行错误: {}"
+VersionTooLow:
+  - "{} version too low: v{}.{}.{}"
+  - "{} 版本过低: v{}.{}.{}"
+VersionParseError:
+  - "Cannot parse {} version info: {}"
+  - "无法解析 {} 版本信息: {}"
+ProcessExitCode:
+  - "Process exit code {}"
+  - "进程退出码 {}"
+DependStillInstalled:
+  - Dependency is still installed
+  - 依赖仍处于已安装状态
+ExtractDependTitle:
+  - Extract dependency
+  - 依赖解压提示
+ExtractDepend:
+  - The dependency download link has been opened in the browser
+  - 依赖下载链接已在浏览器中打开
+ExtractDependOpenUrl:
+  - |-
+      Please click "OK" after completion
+      {}
+  - |-
+      请在完成后点击“确定”
+      {}
+ExtractDependRetry:
+  - |-
+      Failed to extract dependency, retry?
+      Details: {}
+  - |-
+      依赖解压失败，是否重试？
+      详细信息：{}
+InstallDependTitle:
+  - Install dependency
+  - 依赖安装提示
+InstallDependRetry:
+  - Failed to install dependency, retry?
+  - 依赖安装失败，是否重试？
+ViewInstallLog:
+  - View the installation log?
+  - 是否查看安装日志？
+UninstallDependTitle:
+  - Uninstall dependency
+  - 依赖卸载提示
+UninstallDependRetry:
+  - Failed to uninstall dependency, retry?
+  - 依赖卸载失败，是否重试？
+UninstallDependRetryNotInstalled:
+  - Failed to uninstall dependency or not installed, retry?
+  - 依赖卸载失败或未安装，是否重试？
+ViewUninstallLog:
+  - View the uninstallation log?
+  - 是否查看卸载日志？

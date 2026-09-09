@@ -1,0 +1,21 @@
+Error:
+  - Error
+  - 错误
+Install:
+  - Install
+  - 安装
+Uninstall:
+  - Uninstall
+  - 卸载
+DependManager:
+  - "{} Dependency Manager v{}"
+  - "{} 依赖管理器 v{}"
+StatusInstalled:
+  - "Current status: Installed"
+  - 当前状态：已安装
+StatusNotInstalled:
+  - "Current status: Not installed"
+  - 当前状态：未安装
+DetailInfo:
+  - "Detailed information: {:?}"
+  - 详细信息：{:?}
