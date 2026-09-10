@@ -2,6 +2,7 @@ use std::{
   env,
   fs::{self, File},
   io::{Error, ErrorKind, Result},
+  os::windows::process::CommandExt,
   path::{Path, PathBuf},
   process::Command,
 };
@@ -18,6 +19,7 @@ use crate::{
   yesno, yesnocancel,
 };
 use tempfile::TempDir;
+use windows_sys::Win32::System::Threading::CREATE_NO_WINDOW;
 
 include_lang!();
 
@@ -325,7 +327,10 @@ impl Launcher<'_> {
               m!(DependUninstallComplete),
               m!(RestartSystemPrompt)
             ) {
-              let _ = Command::new("shutdown").args(["/r", "/t", "5"]).spawn();
+              let _ = Command::new("shutdown")
+                .args(["/r", "/t", "5"])
+                .creation_flags(CREATE_NO_WINDOW)
+                .spawn();
             }
             return Ok(Some(1));
           }
