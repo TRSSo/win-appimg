@@ -199,6 +199,8 @@ All user-visible text (error messages, dialogs, command-line output) goes throug
 For every `*.yml`, `build.rs` generates a `.rs` file of the same name under `OUT_DIR/i18n/` (e.g. `lang/lib.yml` -> `i18n/src/lib.rs`), which is pulled in by the `include_lang!()` call at the top of the source file. Text containing `{}` placeholders produces a formatting macro, and **the placeholders must match on both the English and Chinese sides**.
 After adding new text, remember to include `include_lang!()` at the beginning of the file and call `init_lang()` at the program entry point.
 
+A **literal `{}` cannot be written directly** in the text: according to `format!` formatting rules, pass `{{}}` to represent the literal `{}` and use `m!(msg,)` to represent a parameterless `format!`.
+
 ### Error Handling
 
 - Use `std::io::Result<T>` and `std::io::Error` consistently; do not introduce a custom error type

@@ -1,6 +1,6 @@
 [package]
 name = "win-appimg"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["TimeRainStarSky <Time.Rain.Star.Sky@Gmail.com>"]
 repository = "https://github.com/TRSSo/win-appimg"
 description = "A tool for creating Windows application images"

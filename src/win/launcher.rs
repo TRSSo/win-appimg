@@ -8,7 +8,7 @@ use std::{
 };
 
 use crate::{
-  include_lang, okcancel,
+  format_args, include_lang, okcancel,
   payload::{LauncherPayload, WritableType},
   retry, retryclose, tempname,
   win::{
@@ -75,7 +75,10 @@ impl Launcher<'_> {
 
   /// 启动 `app_path` 中的应用，并追加运行时传入的命令行参数
   ///
-  /// `app_path` 用于解析相对路径形式的 `exe_path` 与 `exe_workdir`。
+  /// `app_path` 用于解析相对路径形式的 `exe_path` 与 `exe_workdir`，
+  /// 同时作为固定参数中 `{}` 的替换值（见 [`format_args`]）；
+  /// 运行时追加的参数来自使用者输入，不做替换。
+  ///
   /// 返回 `Ok(Some(退出码))` 表示应用已结束；`Ok(None)` 表示需要重试整个启动流程；
   /// `Err` 表示启动失败并进入错误处理。
   pub fn launch(&mut self, app_path: &Path) -> Result<Option<u32>> {
@@ -89,12 +92,7 @@ impl Launcher<'_> {
         .to_string()
     };
 
-    let mut exe_args: Vec<String> = self
-      .payload
-      .exe_args
-      .iter()
-      .map(|s| s.to_string())
-      .collect();
+    let mut exe_args = format_args(&self.payload.exe_args, app_path);
     exe_args.extend(env::args().skip(1));
 
     let exe_workdir = self.payload.exe_workdir.as_ref().map(|p| {

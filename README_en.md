@@ -66,6 +66,7 @@ Application files always stay compressed inside the exe. The DwarFS file system 
   - Request administrator privileges (`--req-admin`)
   - Show a console (`--show-console`)
 - **Complete launch configuration**: supports launching an external program (`--external`), passing start arguments and setting the working directory (`--workdir`)
+- **Argument placeholder**: `{}` in the startup arguments is replaced with the application root directory at runtime, useful for cases like `cmd /c start "{}\start.cmd"`
 
 ### Launcher
 
@@ -172,6 +173,7 @@ win-appimg-cli <SOURCE> <OUTPUT> [OPTIONS] -- <COMMAND> [ARGS...]
 - `<SOURCE>` — the application directory, or an already built `.dwarfs` image file
 - `<OUTPUT>` — the output exe path; `.exe` is appended automatically if the extension differs
 - Everything after `--` is the **startup command of the application inside the image**, stored verbatim and executed at runtime
+- `{}` in the startup arguments is replaced with the **application root directory** at runtime, see [Argument Placeholder](#argument-placeholder)
 
 #### Examples
 
@@ -212,6 +214,10 @@ win-appimg-cli myapp dist/MyApp --req-admin -- app.exe
 
 # Package a command-line program
 win-appimg-cli myapp dist/MyApp --show-console -- app.exe
+
+# Use {} to reference the application root and let the system shell run a script
+# cmd is not inside the image, so -e is required
+win-appimg-cli myapp dist/MyApp -e -- cmd /c start "{}\start.cmd"
 
 # Writable layer stored in MyApp.data next to the exe, kept after exit
 win-appimg-cli myapp dist/MyApp --write -- app.exe
@@ -265,7 +271,7 @@ Current status: Installed
 | :--- | :--- |
 | `<SOURCE>` | Source file path. A directory is packed recursively; a file is treated as an already built DwarFS image |
 | `<OUTPUT>` | Output file path. `.exe` is appended automatically if the extension differs |
-| `[COMMAND]...` | The startup command and fixed arguments after `--`; arguments passed at runtime are appended to them |
+| `[COMMAND]...` | The startup command and fixed arguments after `--`; arguments passed at runtime are appended to them. `{}` in the fixed arguments is replaced with the application root directory at runtime |
 
 #### Options
 
@@ -289,6 +295,30 @@ Current status: Installed
 | `--write-memory` | off | Save the writable layer to the in-memory file system (experimental) |
 | `-h, --help` | — | Show help (`-h` for the short version) |
 | `-V, --version` | — | Show the version |
+
+#### Argument Placeholder
+
+The image mount point is generated randomly at runtime and cannot be known when packaging. Use `{}` in the startup arguments to reference it:
+
+| Written as | Result at runtime |
+| :--- | :--- |
+| `{}` | The application root directory (the mount point; the extraction directory in compatibility mode) |
+| `{{}}` | A literal `{}` |
+| `{`, `{a}`, etc. | Kept verbatim |
+
+```bash
+# Written when packaging
+-- cmd /c start "{}\start.cmd"
+# Actually executed at runtime
+cmd /c start "C:\Users\me\AppData\Local\Temp\Ab3xY9\start.cmd"
+```
+
+Rules:
+
+- Only the **fixed arguments** after `--` are substituted; arguments appended by the user at runtime are left untouched
+- The `<COMMAND>` itself and `--workdir` do not need the placeholder: their relative paths are already resolved against the image mount point
+- The result stays a **single** argument, so a path containing spaces is not split
+- Launching a program outside the image (such as `cmd`) requires `-e`, otherwise packaging fails because the startup command cannot be found
 
 #### Keys Supported by `--set-info`
 

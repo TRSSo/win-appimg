@@ -200,6 +200,8 @@ pub fn open<P: AsRef<Path>>(path: P, offset: u64, length: u64) -> Result<Self> {
 `build.rs` 会为每个 `*.yml` 在 `OUT_DIR/i18n/` 下生成同名的 `.rs`（如 `lang/lib.yml` -> `i18n/src/lib.rs`），由源文件顶层的 `include_lang!()` 引入。带 `{}` 占位的文案会生成格式化宏，**中英两侧的占位符必须一致**。
 新增文案后记得在文件开头添加 `include_lang!()`，程序入口调用 `init_lang()`。
 
+文案里**无法直接写字面量 `{}`**：按 `format!` 的格式化规则，传入 `{{}}` 代表字面量 `{}`，并使用 `m!(msg,)` 代表无参数 `format!`。
+
 ### 错误处理
 
 - 统一使用 `std::io::Result<T>` 与 `std::io::Error`，不引入自定义 error 类型

@@ -56,6 +56,9 @@ pub struct LauncherPayload {
   /// 启动程序路径，相对路径相对镜像挂载点解析
   pub exe_path: String,
   /// 启动程序固定参数，运行时传入的参数会追加在其后
+  ///
+  /// 其中的 `{}` 会在启动时替换为应用根目录，详见 [`crate::format_args`]；
+  /// 运行时追加的参数不做替换。
   pub exe_args: Vec<String>,
   /// 工作目录，相对路径相对镜像挂载点解析
   pub exe_workdir: Option<String>,

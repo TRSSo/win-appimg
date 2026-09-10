@@ -18,8 +18,8 @@ Output:
   - Output file path
   - 输出文件路径
 Command:
-  - Command to execute
-  - 启动命令
+  - "Command to execute, {{}} in arguments is replaced with the app root at runtime"
+  - "启动命令，参数中的 {{}} 在运行时会被替换为应用根目录"
 Workdir:
   - Working directory
   - 工作目录

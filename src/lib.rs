@@ -62,6 +62,9 @@ macro_rules! m {
   ($msg:ident) => {
     I18N_MSG[I18nMsg::$msg as usize][unsafe { $crate::LANG as usize }]
   };
+  ($msg:ident,) => {
+    __i18n_fmt!($msg, unsafe { $crate::LANG })
+  };
   ($msg:ident, $($arg:expr),+ $(,)?) => {
     __i18n_fmt!($msg, unsafe { $crate::LANG }, $($arg),+)
   };
@@ -201,6 +204,50 @@ fn to_relative(from: impl AsRef<Path>, to: impl AsRef<Path>, limit: bool) -> Res
 pub fn tempname(length: usize) -> String {
   std::iter::repeat_with(fastrand::alphanumeric)
     .take(length)
+    .collect()
+}
+
+/// 把参数中的 `{}` 替换为 `path`，用于在启动参数里引用应用根目录
+///
+/// `path` 一般是镜像挂载点（兼容模式下为解压目录），运行前无法预知，
+/// 因此打包时可以写出 `cmd /c start {}\start.cmd` 这样的参数。
+///
+/// 替换规则，只识别下列完整序列，其余内容原样保留：
+///
+/// | 参数写法 | 结果 |
+/// | :--- | :--- |
+/// | `{}` | `path` |
+/// | `{{}}` | 字面量 `{}` |
+/// | `{`、`{a}` 等 | 原样保留 |
+///
+/// 替换产生的内容不会被再次扫描，因此 `path` 自身含 `{}` 也不会被二次替换。
+///
+/// 每个参数独立处理，替换后仍是**一个**参数，含空格也不会被拆开。
+pub fn format_args<T: AsRef<str>>(args: &[T], path: &Path) -> Vec<String> {
+  let path_str = path.to_string_lossy();
+  args
+    .iter()
+    .map(|s| {
+      let s = s.as_ref();
+      let mut result = String::with_capacity(s.len());
+      let mut start = 0;
+      while let Some(idx) = s[start..].find('{') {
+        let abs_idx = start + idx;
+        result.push_str(&s[start..abs_idx]);
+        if s[abs_idx..].starts_with("{{}}") {
+          result.push_str("{}");
+          start = abs_idx + 4;
+        } else if s[abs_idx..].starts_with("{}") {
+          result.push_str(&path_str);
+          start = abs_idx + 2;
+        } else {
+          result.push('{');
+          start = abs_idx + 1;
+        }
+      }
+      result.push_str(&s[start..]);
+      result
+    })
     .collect()
 }
 
@@ -397,5 +444,76 @@ mod tests {
   #[test]
   fn tempname_is_not_constant() {
     assert_ne!(tempname(32), tempname(32));
+  }
+
+  /// 替换用的应用根目录，取固定值以免受运行环境影响
+  const APP: &str = r"C:\app dir";
+
+  /// 用固定的应用根目录替换单个参数，便于逐条对比
+  fn fmt(arg: &str) -> String {
+    format_args(&[arg], Path::new(APP)).pop().unwrap()
+  }
+
+  #[test]
+  fn format_args_replaces_placeholder_with_path() {
+    assert_eq!(fmt("{}"), APP);
+    assert_eq!(fmt(r"{}\start.cmd"), format!(r"{APP}\start.cmd"));
+    assert_eq!(fmt("--path={}"), format!("--path={APP}"));
+    // 同一个参数里的多个占位符都会被替换
+    assert_eq!(fmt("{}{}"), format!("{APP}{APP}"));
+    assert_eq!(fmt("a{}b{}c"), format!("a{APP}b{APP}c"));
+  }
+
+  #[test]
+  fn format_args_keeps_arguments_without_placeholder() {
+    for arg in ["", "cmd", "/c", "no_braces", "a b", "--flag=1"] {
+      assert_eq!(fmt(arg), arg, "arg = {arg:?}");
+    }
+  }
+
+  #[test]
+  fn format_args_escapes_double_braces() {
+    assert_eq!(fmt("{{}}"), "{}");
+    assert_eq!(fmt("{{{}}}"), "{{}}");
+    assert_eq!(fmt("--fmt={{}}"), "--fmt={}");
+    // 转义与替换相邻时互不影响
+    assert_eq!(fmt("{{}}{}"), format!("{{}}{APP}"));
+    assert_eq!(fmt("{}_{{}}_{}"), format!("{APP}_{{}}_{APP}"));
+  }
+
+  #[test]
+  fn format_args_keeps_other_braces_literal() {
+    // 只识别完整的 `{}` 与 `{{}}`，其余以 `{` 开头的内容原样保留
+    for arg in ["{", "{a}", "{abc}{", "}", "}{", "a}b"] {
+      assert_eq!(fmt(arg), arg, "arg = {arg:?}");
+    }
+    // `{{}` 少一个 `}`，不构成转义：前一个 `{` 保留，后面的 `{}` 仍会被替换
+    assert_eq!(fmt("{{}"), format!("{{{APP}"));
+  }
+
+  #[test]
+  fn format_args_does_not_rescan_substituted_path() {
+    // 替换结果不再参与扫描，路径自身含 `{}` 也不会被二次替换
+    let path = Path::new(r"C:\a{}b");
+    assert_eq!(
+      format_args(&["{}", r"{}\x"], path),
+      [r"C:\a{}b".to_string(), r"C:\a{}b\x".to_string()]
+    );
+  }
+
+  #[test]
+  fn format_args_maps_each_argument_independently() {
+    let args = ["cmd", "/c", "start", r"{}\start.cmd"];
+    assert_eq!(
+      format_args(&args, Path::new(APP)),
+      [
+        "cmd".to_string(),
+        "/c".to_string(),
+        "start".to_string(),
+        format!(r"{APP}\start.cmd"),
+      ]
+    );
+    // 空参数列表不会产生多余元素
+    assert!(format_args::<String>(&[], Path::new(APP)).is_empty());
   }
 }

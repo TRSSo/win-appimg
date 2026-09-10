@@ -39,7 +39,7 @@ fn scan_yml_files(path: &Path, res: &mut Vec<PathBuf>) -> std::io::Result<()> {
 fn build_i18n(source_path: &Path) -> Result<(), Box<dyn error::Error>> {
   println!("cargo:rerun-if-changed={}", source_path.display());
   let output_path = PathBuf::from(env::var("OUT_DIR").unwrap());
-  let format = Regex::new(r"\{[^{}]*\}").unwrap();
+  let format = Regex::new(r"\{[^{}]*\}")?;
 
   let mut paths = Vec::new();
   scan_yml_files(source_path, &mut paths)?;

@@ -31,7 +31,7 @@ static GLOBAL: MiMalloc = MiMalloc;
 #[derive(Parser)]
 #[command(
   name = env!("CARGO_PKG_NAME"),
-  version = env!("CARGO_PKG_VERSION"),
+  version = concat!("v", env!("CARGO_PKG_VERSION")),
   about = m!(About),
   long_about = m!(LongAbout, env!("CARGO_PKG_NAME"))
 )]
@@ -43,8 +43,8 @@ struct Args {
   /// 输出文件路径
   #[arg(help = m!(Output))]
   output: PathBuf,
-  /// 启动命令
-  #[arg(last = true, help = m!(Command))]
+  /// 启动命令，参数中的 `{}` 会在运行时替换为应用根目录
+  #[arg(last = true, help = m!(Command,))]
   command: Vec<String>,
   /// 工作目录
   #[arg(short, long, value_name = "DIR", help = m!(Workdir))]
