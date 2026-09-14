@@ -53,11 +53,11 @@ fastrand = "2"
 sha256 = "1"
 clap = { version = "4", features = ["derive"] }
 mimalloc = "0"
-sys-locale = "0.3.2"
-file-id = "0.2.3"
+sys-locale = "0"
+file-id = "0"
 
 [build-dependencies]
-yaml-rust2 = { version = "0.12.0", default-features = false }
+yaml-rust2 = { version = "0", default-features = false }
 regex = "1"
 
 [target."cfg(windows)".dependencies]

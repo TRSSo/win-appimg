@@ -148,13 +148,28 @@ pub fn get_payload<T: for<'a> FromMessagePack<'a>>(mut file: &std::fs::File) -> 
 /// 在 PE 镜像中查找 `.payload` 段的文件偏移
 ///
 /// 不存在该段时返回 `ErrorKind::NotFound`。
-pub fn find_offset(image: &Image) -> Result<u64> {
+pub fn find_pe_offset(image: &Image) -> Result<u64> {
   for i in image.section_table().iter() {
     if i.name().as_deref() == Some(".payload") {
       return Ok(i.pointer_to_raw_data as u64);
     }
   }
   Err(Error::new(ErrorKind::NotFound, m!(PayloadOffsetNotFound)))
+}
+
+/// 在文件中查找 `PAYLOAD_PLACEHOLDER` 的文件偏移
+///
+/// 不存在该段时返回 `ErrorKind::NotFound`。
+pub fn find_offset(file: &mut File) -> Result<u64> {
+  let mut data = Vec::new();
+  file.read_to_end(&mut data)?;
+  data
+    .windows(PAYLOAD_PLACEHOLDER.len())
+    .position(|x| x == PAYLOAD_PLACEHOLDER)
+    .map_or(
+      Err(Error::new(ErrorKind::NotFound, m!(PayloadOffsetNotFound))),
+      |pos| Ok(pos as u64),
+    )
 }
 
 /// 默认读写缓冲大小。

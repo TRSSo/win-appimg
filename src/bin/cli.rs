@@ -17,7 +17,7 @@ use mimalloc::MiMalloc;
 use win_appimg::{
   PathConvert, dwarfs_enc, include_lang,
   payload::{
-    LauncherPayload, Payload, PayloadData, WritableType, find_offset, get_payload, hash_file,
+    LauncherPayload, Payload, PayloadData, WritableType, find_pe_offset, get_payload, hash_file,
     show_length,
   },
 };
@@ -336,7 +336,7 @@ fn main() -> Result<()> {
       .map_err(|e| Error::new(ErrorKind::InvalidData, m!(WriteResourceError, e)))?;
   }
 
-  let launcher_payload_offset = find_offset(&image)?;
+  let launcher_payload_offset = find_pe_offset(&image)?;
   image
     .write_writer(&mut output_file)
     .map_err(|e| Error::new(ErrorKind::InvalidData, m!(WriteProgramError, e)))?;

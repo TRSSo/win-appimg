@@ -203,24 +203,12 @@ fn handle(
   let source_length = source_file.metadata()?.len();
 
   #[cfg(windows)]
-  let source_payload = win_appimg::payload::find_offset(
+  let source_payload = win_appimg::payload::find_pe_offset(
     &editpe::Image::parse_reader(&mut source_file)
       .map_err(|e| Error::new(ErrorKind::InvalidData, m!(ReadProgramError, e)))?,
   )?;
   #[cfg(not(windows))]
-  let source_payload = {
-    use std::io::Read;
-    use win_appimg::payload::PAYLOAD_PLACEHOLDER;
-    let mut data = Vec::new();
-    source_file.read_to_end(&mut data)?;
-    data
-      .windows(PAYLOAD_PLACEHOLDER.len())
-      .position(|x| x == PAYLOAD_PLACEHOLDER)
-      .map_or(
-        Err(Error::new(ErrorKind::NotFound, m!(PayloadOffsetNotFound))),
-        |pos| Ok(pos as u64),
-      )
-  }?;
+  let source_payload = win_appimg::payload::find_offset(&mut source_file)?;
 
   let mut file = File::create(&output_path)?;
   source_file.seek(SeekFrom::Start(0))?;
@@ -375,7 +363,7 @@ fn handle_depend(
   let mut source_file = File::open(source_path)?;
   let source_length = source_file.metadata()?.len();
 
-  let source_payload = win_appimg::payload::find_offset(
+  let source_payload = win_appimg::payload::find_pe_offset(
     &editpe::Image::parse_reader(&mut source_file)
       .map_err(|e| Error::new(ErrorKind::InvalidData, m!(ReadProgramError, e)))?,
   )?;

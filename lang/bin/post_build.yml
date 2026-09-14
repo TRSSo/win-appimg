@@ -33,9 +33,6 @@ PackFile:
 ReadProgramError:
   - Read program error {:?}
   - 读取程序错误 {:?}
-PayloadOffsetNotFound:
-  - Info offset not found
-  - 未找到信息偏移
 
 WriteDepend:
   - Write dependencies

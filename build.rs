@@ -172,16 +172,13 @@ fn build_i18n(source_path: &Path) -> Result<(), Box<dyn error::Error>> {
     };
 
     if !msg.is_empty() {
-      code.push_str("pub enum I18nMsg {\n");
+      code.push_str("enum I18nMsg {\n");
       for i in &msg {
         code.push_str(&format!("  {},\n", i.0));
       }
       code.push_str("}\n");
 
-      code.push_str(&format!(
-        "pub const I18N_MSG: [[&str; 2]; {}] = [\n",
-        msg.len()
-      ));
+      code.push_str(&format!("const I18N_MSG: [[&str; 2]; {}] = [\n", msg.len()));
       for i in &msg {
         code.push_str(&format!("  [{:?}, {:?}],\n", i.1, i.2));
       }

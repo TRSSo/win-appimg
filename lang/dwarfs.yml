@@ -1,6 +1,3 @@
-ReadFileSizeError:
-  - Cannot read file size
-  - 无法读取文件大小
 OffsetOutOfRange:
   - "Offset {} > file size {}"
   - "偏移量 {} > 文件大小 {}"

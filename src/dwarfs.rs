@@ -38,9 +38,7 @@ impl SegmentFile {
     #[cfg(windows)]
     let (file, size) = {
       let file = dwarfs::positioned_io::RandomAccessFile::open(path)?;
-      let size = file
-        .size()?
-        .ok_or_else(|| Error::new(ErrorKind::InvalidData, m!(ReadFileSizeError)))?;
+      let size = file.size()?.unwrap_or(0);
       (file, size)
     };
     #[cfg(not(windows))]
