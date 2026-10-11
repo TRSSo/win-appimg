@@ -7,7 +7,6 @@ use std::{
   process::Command,
 };
 
-use mimalloc::MiMalloc;
 use sha256::try_digest;
 use tempfile::tempdir;
 use win_appimg::{
@@ -18,8 +17,9 @@ use zerompk::to_msgpack_vec;
 
 include_lang!();
 
+#[cfg(feature = "mimalloc")]
 #[global_allocator]
-static GLOBAL: MiMalloc = MiMalloc;
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 /// WinFsp 安装包下载地址
 const WINFSP_URL: &str =

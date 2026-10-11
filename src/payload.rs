@@ -3,6 +3,7 @@ use std::{
   fs::File,
   io::{Error, ErrorKind, Read, Result, Seek, SeekFrom},
   path::Path,
+  ptr::read_volatile,
 };
 
 use crate::{dwarfs, include_lang};
@@ -117,9 +118,9 @@ static PAYLOAD_OFFSET: PayloadOffset = {
 /// 从自身可执行文件的 `.payload` 段读取信息偏移，并反序列化为 `T`
 ///
 /// 信息偏移超过文件长度或信息不是合法的 MessagePack 数据时返回错误。
-pub fn get_payload<T: for<'a> FromMessagePack<'a>>(mut file: &std::fs::File) -> Result<T> {
+pub fn get_payload<T: for<'a> FromMessagePack<'a>>(file: &mut File) -> Result<T> {
   let file_length = file.metadata()?.len();
-  let payload_offset = unsafe { std::ptr::read_volatile(&PAYLOAD_OFFSET) };
+  let payload_offset = unsafe { read_volatile(&PAYLOAD_OFFSET) };
 
   if file_length < payload_offset.offset
     || payload_offset.length > file_length - payload_offset.offset
@@ -139,10 +140,8 @@ pub fn get_payload<T: for<'a> FromMessagePack<'a>>(mut file: &std::fs::File) -> 
   let mut data = vec![0u8; payload_offset.length as usize];
   file.read_exact(&mut data)?;
 
-  let payload = from_msgpack(&data)
-    .map_err(|e| Error::new(ErrorKind::InvalidData, m!(PayloadDeserializeError, e)))?;
-
-  Ok(payload)
+  from_msgpack(&data)
+    .map_err(|e| Error::new(ErrorKind::InvalidData, m!(PayloadDeserializeError, e)))
 }
 
 /// 在 PE 镜像中查找 `.payload` 段的文件偏移
@@ -326,7 +325,7 @@ mod tests {
     // 测试程序未经 post_build 回填，`.payload` 段仍是占位符，
     // 其字节被解析为一个远超文件长度的偏移，必须报错而不是读到垃圾数据
     let file = temp_with(b"win-appimg");
-    let err = get_payload::<PayloadData>(&file.reopen().unwrap()).unwrap_err();
+    let err = get_payload::<PayloadData>(&mut file.reopen().unwrap()).unwrap_err();
     assert_eq!(err.kind(), ErrorKind::InvalidData);
   }
 

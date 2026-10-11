@@ -236,15 +236,12 @@ fn build_i18n(source_path: &Path) -> Result<(), Box<dyn error::Error>> {
 fn main() -> Result<(), Box<dyn error::Error>> {
   build_i18n(Path::new("lang"))?;
 
-  #[cfg(windows)]
+  #[cfg(all(windows, any(feature = "launcher", feature = "post_build")))]
   {
     // build_i18n 已声明过 rerun-if-changed，Cargo 不再默认监视整个包，
     // 因此资源目录必须显式声明，否则改动图标或清单后不会重新编译资源
     println!("cargo:rerun-if-changed=res");
     let path = Path::new("res");
-    if !path.exists() {
-      return Ok(());
-    }
 
     let mut res = winresource::WindowsResource::new();
     res.set("FileDescription", env!("CARGO_PKG_DESCRIPTION"));

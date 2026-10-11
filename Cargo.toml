@@ -1,6 +1,6 @@
 [package]
 name = "win-appimg"
-version = "0.0.2"
+version = "0.0.3"
 authors = ["TimeRainStarSky <Time.Rain.Star.Sky@Gmail.com>"]
 repository = "https://github.com/TRSSo/win-appimg"
 description = "A tool for creating Windows application images"
@@ -21,10 +21,11 @@ include = [
 ]
 
 [features]
-default = ["cli"]
-cli = []
+default = ["mimalloc", "cli", "post_build"]
+cli = ["dep:clap"]
 depend = []
 launcher = []
+post_build = ["dep:sha256"]
 
 [[bin]]
 name = "cli"
@@ -41,8 +42,13 @@ name = "launcher"
 path = "src/bin/launcher.rs"
 required-features = ["launcher"]
 
+[[bin]]
+name = "post_build"
+path = "src/bin/post_build.rs"
+required-features = ["post_build"]
+
 [dependencies]
-zerompk = { version = "0", features = ["derive"] }
+zerompk = { version = "0", features = ["derive"], default-features = false }
 editpe = "0"
 tempfile = "3"
 dwarfs = "0"
@@ -50,11 +56,11 @@ dwarfs-enc = "0"
 path-clean = "1"
 xxhash-rust = { version = "0", features = ["xxh3"] }
 fastrand = "2"
-sha256 = "1"
-clap = { version = "4", features = ["derive"] }
-mimalloc = "0"
 sys-locale = "0"
 file-id = "0"
+mimalloc = { version = "0", optional = true }
+sha256 = { version = "1", optional = true }
+clap = { version = "4", features = ["derive"], optional = true }
 
 [build-dependencies]
 yaml-rust2 = { version = "0", default-features = false }
@@ -65,6 +71,7 @@ windows-sys = { version = "0", features = [
   "Win32_UI_WindowsAndMessaging",
   "Win32_UI_Controls",
   "Win32_UI_Shell",
+  "Win32_System_Console",
   "Win32_System_Registry",
   "Win32_System_JobObjects",
 ] }

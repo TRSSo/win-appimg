@@ -13,7 +13,6 @@ use editpe::{
   constants::{RT_GROUP_ICON, RT_ICON, RT_VERSION},
   types::VersionU32,
 };
-use mimalloc::MiMalloc;
 use win_appimg::{
   PathConvert, dwarfs_enc, include_lang,
   payload::{
@@ -25,8 +24,9 @@ use zerompk::to_msgpack_vec;
 
 include_lang!();
 
+#[cfg(feature = "mimalloc")]
 #[global_allocator]
-static GLOBAL: MiMalloc = MiMalloc;
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 #[derive(Parser)]
 #[command(
@@ -183,7 +183,7 @@ fn main() -> Result<()> {
   }
 
   let mut file = File::open(current_exe()?)?;
-  let payload = get_payload::<Payload>(&file)?;
+  let payload = get_payload::<Payload>(&mut file)?;
 
   let output_path = ensure_exe_extension(args.output);
 

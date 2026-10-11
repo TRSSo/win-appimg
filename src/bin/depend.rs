@@ -1,7 +1,6 @@
 #![windows_subsystem = "windows"]
 use std::{env, fs::File, io::Result, path::Path, process::ExitCode};
 
-use mimalloc::MiMalloc;
 use tempfile::tempdir;
 use win_appimg::{
   include_lang, ok, option,
@@ -15,8 +14,9 @@ use win_appimg::{
 
 include_lang!();
 
+#[cfg(feature = "mimalloc")]
 #[global_allocator]
-static GLOBAL: MiMalloc = MiMalloc;
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 /// 显示依赖管理窗口，返回 `true` 表示继续显示窗口（`false` 表示用户退出）
 fn window(depend_path: &Path) -> bool {
@@ -50,7 +50,7 @@ fn window(depend_path: &Path) -> bool {
 fn launch() -> Result<()> {
   let path = env::current_exe()?;
   let mut file = File::open(&path)?;
-  let payload = get_payload::<PayloadData>(&file)?;
+  let payload = get_payload::<PayloadData>(&mut file)?;
   let tempdir = tempdir()?;
   let depend_path = tempdir.path().join(tempname(6));
   match extract_depend(&path, &mut file, &payload, &depend_path) {
